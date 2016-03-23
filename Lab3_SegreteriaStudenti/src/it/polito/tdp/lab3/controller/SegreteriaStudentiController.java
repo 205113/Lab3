@@ -66,13 +66,16 @@ public class SegreteriaStudentiController {
 
     @FXML
     void doIscrivi(ActionEvent event) {
-
+   //test completa(funziona)
+   /* risultato.setText("Sto cercando...");
+    SegreteriaStudentiModel s=new SegreteriaStudentiModel();
+    risultato.setText(s.completa(matricola.getText()));*/
     }
     private List<String>Corsi(){
-    	List<String>corsi=new LinkedList<String>();
+    	List<String>corsi=new ArrayList<String>();
     	corsi.add("Nessun corso");
     	//carico corsi da DB
-    	return null;
+    	return corsi;
     }
 
     @FXML
@@ -89,6 +92,7 @@ public class SegreteriaStudentiController {
         assert cancella != null : "fx:id=\"cancella\" was not injected: check your FXML file 'SegreteriaStudenti.fxml'.";
         nome.setEditable(false);
         cognome.setEditable(false);
+        
         //corsi.getItems().addAll(((ObservableList<String>) Corsi()));
     }
 }
