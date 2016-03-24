@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.util.*;
 
 public class SegreteriaStudentiModel {
-	//private List<Studente>studenti;
 	
 	public String completa(String matricola){
 		//completa nome e cognome data matricola
@@ -33,17 +32,112 @@ public class SegreteriaStudentiModel {
 	}
 	public String cercaCorsi(String matricola){
 		//visualizza corsi della matricola
-		return "";
+		String risultato="";
+		List<String>codici=new LinkedList<String>();
+		String url="jdbc:mysql://localhost/iscritticorsi?user=root";
+		try {
+			Connection cn=DriverManager.getConnection(url);
+			Statement st= cn.createStatement();
+			ResultSet rs=st.executeQuery("SELECT codins FROM iscrizione WHERE matricola=\""+matricola+"\"");
+			while(rs.next()){
+				codici.add(rs.getString("codins"));
+			}
+			for(int i=0;i<codici.size();i++){
+				rs=st.executeQuery("SELECT * FROM corso WHERE codins=\""+codici.get(i)+"\"");
+				rs.next();
+				risultato+=rs.getString("codins")+" "+rs.getInt("crediti")+" "+rs.getString("nome")+" "+rs.getInt("pd")+"/n";
+			}
+			rs.close();
+			cn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return risultato;
 	}
 	public String cercaStudenti(String codice){
 		//visualizza matricole del corso 
-		return "";
+		String risultato="";
+		List<Integer>codici=new LinkedList<Integer>();
+		String url="jdbc:mysql://localhost/iscritticorsi?user=root";
+		try {
+			Connection cn=DriverManager.getConnection(url);
+			Statement st= cn.createStatement();
+			ResultSet rs=st.executeQuery("SELECT matricola FROM iscrizione WHERE codins=\""+codice+"\"");
+			while(rs.next()){
+				codici.add(rs.getInt("matricola"));
+			}
+			for(int i=0;i<codici.size();i++){
+				rs=st.executeQuery("SELECT * FROM studente WHERE matricola=\""+codici.get(i)+"\"");
+				rs.next();
+				risultato+=rs.getInt("matricola")+" "+rs.getString("cognome")+" "+rs.getString("nome")+" "+rs.getString("CDS")+"/n";
+			}
+			rs.close();
+			cn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return risultato;
 	}
 	public boolean iscritto(String matricola,String codice){
-		//verifica se matricola iscritto a codice
+		String url="jdbc:mysql://localhost/iscritticorsi?user=root";
+		try {boolean result;
+			Connection cn=DriverManager.getConnection(url);
+			Statement st= cn.createStatement();
+			ResultSet rs=st.executeQuery("SELECT * FROM iscrizione WHERE matricola=\""+matricola+"\" AND codins=\""+codice+"\"");
+			if(rs.next()){
+				result= true;
+			}else{
+				result= false;
+			}
+			cn.close();
+			rs.close();
+			return result;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return false;
 	}
-	public void iscrivi(String matricola,String codice){
+	public String iscrivi(String matricola,String codice){
 		//iscrive matricola a corso se non lo è già
+		if(this.iscritto(matricola, codice))
+			return "lo studente è gia iscritto al corso";
+		else{String url="jdbc:mysql://localhost/iscritticorsi?user=root";
+			Connection cn;
+			try {
+				cn = DriverManager.getConnection(url);
+				Statement st= cn.createStatement();
+				st.executeUpdate("INSERT INTO `iscrizione` (`matricola`, `codins`) VALUES ("+matricola+", '"+codice+"')");
+				return "Lo studente è stato iscritto";
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return"errore nella creazione dell'iscrizione";
+		}
+			
+	}
+	public String corso(String nome){
+		String codice="";
+		String url="jdbc:mysql://localhost/iscritticorsi?user=root";
+		try {
+			Connection cn=DriverManager.getConnection(url);
+			Statement st= cn.createStatement();
+			ResultSet rs=st.executeQuery("SELECT codins FROM corso WHERE nome=\""+nome+"\"");
+			if(rs.next()){
+				codice= rs.getString("codins");
+			}else{
+				codice= "";
+			}
+			cn.close();
+			rs.close();
+			return codice;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return codice;
 	}
 }

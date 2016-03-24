@@ -14,7 +14,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 public class SegreteriaStudentiController {
-
+	private SegreteriaStudentiModel model;
     @FXML
     private ResourceBundle resources;
 
@@ -34,6 +34,9 @@ public class SegreteriaStudentiController {
     private TextField matricola;
 
     @FXML
+    private Button completa;
+    
+    @FXML
     private TextField nome;
 
     @FXML
@@ -50,7 +53,9 @@ public class SegreteriaStudentiController {
 
     @FXML
     private Button cancella;
-
+    public void setModel( SegreteriaStudentiModel model ) {
+    	this.model = model ;
+    }
     @FXML
     void doCancella(ActionEvent event) {
     	risultato.clear();
@@ -59,6 +64,21 @@ public class SegreteriaStudentiController {
     	cognome.clear();
     }
 
+
+    @FXML
+    void doCompleta(ActionEvent event) {
+ 
+    	    String s=model.completa(matricola.getText());
+    	    String[]studente=s.split("-");
+    	    if(studente.length==2){
+    	    	//completa
+    	    	nome.setText(studente[0]);
+    	    	cognome.setText(studente[1]);
+    	    }
+    	    else{
+    	    	risultato.setText(s);
+    	    }
+    }
     @FXML
     void doCerca(ActionEvent event) {
 
@@ -66,17 +86,23 @@ public class SegreteriaStudentiController {
 
     @FXML
     void doIscrivi(ActionEvent event) {
-   //test completa(funziona)
-   /* risultato.setText("Sto cercando...");
-    SegreteriaStudentiModel s=new SegreteriaStudentiModel();
-    risultato.setText(s.completa(matricola.getText()));*/
+    	if(false){//condizione errata, sarebbe per capire se ha scelto un corso
+    		risultato.setText("Non hai selezionato alcun corso");
+    	}
+    	else{
+    		String codice=model.corso("Diritto commerciale");//errato,dovrebbe essere elemento del menu
+    		if(codice.compareTo("")==0)
+    			risultato.setText("il corso non esiste");
+    		else
+    			risultato.setText(model.iscrivi(matricola.getText(), codice));
+    	}
     }
-    private List<String>Corsi(){
+    /*private List<String>Corsi(){
     	List<String>corsi=new ArrayList<String>();
     	corsi.add("Nessun corso");
     	//carico corsi da DB
     	return corsi;
-    }
+    }*/
 
     @FXML
     void initialize() {
@@ -84,6 +110,7 @@ public class SegreteriaStudentiController {
         assert corsi != null : "fx:id=\"corsi\" was not injected: check your FXML file 'SegreteriaStudenti.fxml'.";
         assert lblStudente != null : "fx:id=\"lblStudente\" was not injected: check your FXML file 'SegreteriaStudenti.fxml'.";
         assert matricola != null : "fx:id=\"matricola\" was not injected: check your FXML file 'SegreteriaStudenti.fxml'.";
+        assert completa != null : "fx:id=\"completa\" was not injected: check your FXML file 'SegreteriaStudenti.fxml'.";
         assert nome != null : "fx:id=\"nome\" was not injected: check your FXML file 'SegreteriaStudenti.fxml'.";
         assert cognome != null : "fx:id=\"cognome\" was not injected: check your FXML file 'SegreteriaStudenti.fxml'.";
         assert cerca != null : "fx:id=\"cerca\" was not injected: check your FXML file 'SegreteriaStudenti.fxml'.";

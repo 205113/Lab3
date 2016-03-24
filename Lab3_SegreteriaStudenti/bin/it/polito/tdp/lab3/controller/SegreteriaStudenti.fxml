@@ -10,12 +10,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<BorderPane prefHeight="252.0" prefWidth="176.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.65" fx:controller="it.polito.tdp.lab3.controller.SegreteriaStudentiController">
+<BorderPane prefHeight="327.0" prefWidth="262.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polito.tdp.lab3.controller.SegreteriaStudentiController">
    <center>
-      <VBox BorderPane.alignment="CENTER">
+      <VBox prefHeight="388.0" prefWidth="382.0" BorderPane.alignment="CENTER">
          <children>
-            <HBox prefHeight="36.0" prefWidth="201.0">
+            <HBox prefHeight="36.0" prefWidth="285.0">
                <children>
                   <Label fx:id="lblCorso" text="Corso:" />
                   <ComboBox fx:id="corsi" prefHeight="25.0" prefWidth="64.0">
@@ -28,8 +27,9 @@
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
                   <Label fx:id="lblStudente" prefHeight="17.0" prefWidth="51.0" text="Studente:" />
-                  <TextField fx:id="matricola" prefHeight="25.0" prefWidth="43.0" />
-                  <TextField fx:id="nome" prefHeight="25.0" prefWidth="40.0" />
+                  <TextField fx:id="matricola" prefHeight="25.0" prefWidth="71.0" />
+                  <Button fx:id="completa" mnemonicParsing="false" onAction="#doCompleta" prefHeight="25.0" prefWidth="77.0" text="Completa" />
+                  <TextField fx:id="nome" prefHeight="25.0" prefWidth="53.0" />
                   <TextField fx:id="cognome" prefHeight="25.0" prefWidth="48.0" />
                </children>
             </HBox>
