@@ -45,7 +45,7 @@ public class SegreteriaStudentiModel {
 			for(int i=0;i<codici.size();i++){
 				rs=st.executeQuery("SELECT * FROM corso WHERE codins=\""+codici.get(i)+"\"");
 				rs.next();
-				risultato+=rs.getString("codins")+" "+rs.getInt("crediti")+" "+rs.getString("nome")+" "+rs.getInt("pd")+"/n";
+				risultato+=rs.getString("codins")+" "+rs.getInt("crediti")+" "+rs.getString("nome")+" "+rs.getInt("pd")+"\n";
 			}
 			rs.close();
 			cn.close();
@@ -70,7 +70,7 @@ public class SegreteriaStudentiModel {
 			for(int i=0;i<codici.size();i++){
 				rs=st.executeQuery("SELECT * FROM studente WHERE matricola=\""+codici.get(i)+"\"");
 				rs.next();
-				risultato+=rs.getInt("matricola")+" "+rs.getString("cognome")+" "+rs.getString("nome")+" "+rs.getString("CDS")+"/n";
+				risultato+=rs.getInt("matricola")+" "+rs.getString("cognome")+" "+rs.getString("nome")+" "+rs.getString("CDS")+"\n";
 			}
 			rs.close();
 			cn.close();
@@ -140,4 +140,25 @@ public class SegreteriaStudentiModel {
 		}
 		return codice;
 	}
+    public List<String>Corsi(){
+    	List<String>corsi=new ArrayList<String>();
+    	//corsi.add("Nessun corso");
+    	//carico corsi da DB
+		String url="jdbc:mysql://localhost/iscritticorsi?user=root";
+		try {
+			Connection cn=DriverManager.getConnection(url);
+			Statement st= cn.createStatement();
+			ResultSet rs=st.executeQuery("SELECT nome FROM corso ");
+			while(rs.next()){
+				corsi.add( rs.getString("nome"));
+			}
+			cn.close();
+			rs.close();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return corsi;
+    }
 }

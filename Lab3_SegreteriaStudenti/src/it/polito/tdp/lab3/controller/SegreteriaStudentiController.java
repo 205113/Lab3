@@ -1,10 +1,13 @@
 package it.polito.tdp.lab3.controller;
 
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.*;
-import java.util.ResourceBundle;
 
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -81,28 +84,62 @@ public class SegreteriaStudentiController {
     }
     @FXML
     void doCerca(ActionEvent event) {
-
+    	if((corsi.getValue()==null)&&(matricola.getText().compareTo("")==0))
+    		risultato.setText("dati mancanti");
+    	else { 
+    		if((corsi.getValue()!=null)&&(matricola.getText().compareTo("")!=0)){
+    			boolean iscritto=model.iscritto(matricola.getText(), model.corso(corsi.getValue()));
+    			if(iscritto)
+    				risultato.setText("Lo studente è iscritto al corso");
+    			else
+    				risultato.setText("Lo studente non è iscritto al corso");
+    		}else{
+    			if(corsi.getValue()==null){
+    				risultato.setText(model.cercaCorsi(matricola.getText()));
+    			}else{
+    				risultato.setText(model.cercaStudenti(model.corso(corsi.getValue())));
+    			}
+    		}
+    		
+    	}
+    	
     }
 
     @FXML
     void doIscrivi(ActionEvent event) {
-    	if(false){//condizione errata, sarebbe per capire se ha scelto un corso
+    	if(corsi.getValue()==null){
     		risultato.setText("Non hai selezionato alcun corso");
     	}
     	else{
-    		String codice=model.corso("Diritto commerciale");//errato,dovrebbe essere elemento del menu
+    		String codice=model.corso(corsi.getValue());
     		if(codice.compareTo("")==0)
     			risultato.setText("il corso non esiste");
     		else
     			risultato.setText(model.iscrivi(matricola.getText(), codice));
     	}
     }
-    /*private List<String>Corsi(){
+    private List<String>Corsi(){
     	List<String>corsi=new ArrayList<String>();
-    	corsi.add("Nessun corso");
+    	//corsi.add("Nessun corso");
     	//carico corsi da DB
+		String url="jdbc:mysql://localhost/iscritticorsi?user=root";
+		try {
+			Connection cn=DriverManager.getConnection(url);
+			Statement st= cn.createStatement();
+			ResultSet rs=st.executeQuery("SELECT nome FROM corso ");
+			while(rs.next()){
+				corsi.add( rs.getString("nome"));
+			}
+			cn.close();
+			rs.close();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	return corsi;
-    }*/
+    }
+
 
     @FXML
     void initialize() {
@@ -119,7 +156,6 @@ public class SegreteriaStudentiController {
         assert cancella != null : "fx:id=\"cancella\" was not injected: check your FXML file 'SegreteriaStudenti.fxml'.";
         nome.setEditable(false);
         cognome.setEditable(false);
-        
-        //corsi.getItems().addAll(((ObservableList<String>) Corsi()));
+        corsi.getItems().addAll(( Corsi()));
     }
 }
